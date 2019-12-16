@@ -19,7 +19,6 @@ public class Account {
         this.UserName = UserName;
         this.PassWord = PassWord;
         this.Type = Type;
-        
     }
     
     
