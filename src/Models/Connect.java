@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Connect {
-	private static String DB_URL = "jdbc:sqlserver://localhost:1434;"
+	private static String DB_URL = "jdbc:sqlserver://localhost:1433;"
             + "databaseName=QuanLyQuanCaffe;"
             + "integratedSecurity=true";
     private static String USER_NAME = "1";
