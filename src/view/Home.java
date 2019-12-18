@@ -5,39 +5,61 @@
  */
 package view;
 
+import Models.Bill;
 import Models.BillInfo;
 import Models.Food;
 import Models.FoodCategory;
 import Models.TableFood;
+import Models.Time;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import static com.itextpdf.text.Font.ITALIC;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+//import com.itextpdf.text.Image;
 import controller.BillInfoController;
 import controller.FoodCategoryController;
 import controller.FoodController;
 import controller.TableController;
 import java.awt.Image;
 import java.awt.event.ItemEvent;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+
 
 /**
  *
  * @author Admin
  */
 public class Home extends javax.swing.JFrame {
-    String userName;
-    int type;
+
     ArrayList<FoodCategory> foodCategoryList;
 
     /**
      * Creates new form Home
      */
-    public Home(String UserName, int Type) {
+    public Home() {
         initComponents();
         this.setLocationRelativeTo(null);
         try {
@@ -46,8 +68,6 @@ public class Home extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.userName = UserName;
-        this.type = Type;
     }
 
     /**
@@ -72,6 +92,7 @@ public class Home extends javax.swing.JFrame {
         tfTotal = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
         jLabel34 = new javax.swing.JLabel();
+        jButton5 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbBillInfo = new javax.swing.JTable();
@@ -151,6 +172,14 @@ public class Home extends javax.swing.JFrame {
         jLabel34.setForeground(new java.awt.Color(204, 204, 204));
         jLabel34.setText("CafeManager");
 
+        jButton5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jButton5.setText("IN HÓA ĐƠN");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -182,14 +211,16 @@ public class Home extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(tfTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(49, 49, 49))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel34)
                 .addGap(83, 83, 83))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -216,7 +247,9 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(tfTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel34))
         );
 
@@ -600,11 +633,8 @@ public class Home extends javax.swing.JFrame {
 
     private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
         Staff staff = new Staff();
-        staff.setUserName(userName);
-        staff.loadStaff(userName);
-        //staff.setPower(false);
+        staff.setPower(false);
         staff.setVisible(true);
-    //    System.out.println(userName);
     }//GEN-LAST:event_jMenu3MouseClicked
 
     private void cbCategoryItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbCategoryItemStateChanged
@@ -642,6 +672,133 @@ public class Home extends javax.swing.JFrame {
         tbBillInfo.setModel(dataModel);
     }//GEN-LAST:event_lbTable1MouseClicked
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model=(DefaultTableModel) tbBillInfo.getModel();
+         if (model.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "Chưa có dữ liệu để xuất file !");
+        } else {
+             JFileChooser fc= new JFileChooser();
+             fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+             fc.setAcceptAllFileFilterUsed(false);
+             FileNameExtensionFilter ft= new FileNameExtensionFilter("PDF Document", "PDF");
+             fc.addChoosableFileFilter(ft);
+             int returnVal=fc.showSaveDialog(this);
+             if(returnVal == javax.swing.JFileChooser.APPROVE_OPTION){
+                 try {
+                     String FileName=fc.getSelectedFile().getName();
+                     String dir=fc.getCurrentDirectory().toString();
+                     File f= new File(dir +"\\" +FileName + ".pdf");
+                     
+                     if(f.exists()){
+                         JOptionPane.showMessageDialog(this, "Tệp tin đã tồn tại!");
+                     }
+                     else{
+                         Document document = new Document (PageSize.A4, 50, 50, 10, 50);
+                         PdfWriter writer;
+                         writer=PdfWriter.getInstance(document, new FileOutputStream(dir +"\\" + FileName +".pdf"));
+                         document.open();
+                         
+                        Font f1 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
+                        f1.setSize(15);
+                        f1.setColor(BaseColor.BLACK);
+                        Paragraph p1=new Paragraph("CAFE MANAGER");
+                        p1.setAlignment(Element.ALIGN_CENTER);
+                        document.add(p1);
+                        
+                        Font f3 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
+                        f3.setSize(15);
+                        f3.setColor(BaseColor.BLACK);
+                        Paragraph p3=new Paragraph("Group 7");
+                        p3.setAlignment(Element.ALIGN_CENTER);
+                        document.add(p3);
+                        
+                        Font f2 = new Font(BaseFont.createFont("/asset/vuArial.ttf",BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
+                        f2.setSize(10);
+                        f2.setColor(BaseColor.BLACK);
+                        Paragraph p2=new Paragraph("Vo Nguyen Giap street, Dong Anh district, Ha Noi");
+                        p2.setAlignment(Element.ALIGN_CENTER);
+                        document.add(p2);
+                        
+                        Font f4 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
+                        f4.setSize(20);
+                        f4.setColor(BaseColor.BLACK);
+//                        f4.setStyle(BOLD);
+                        Paragraph p4=new Paragraph("HÓA ĐƠN BÁN HÀNG",f4);
+                        p4.setAlignment(Element.ALIGN_CENTER);
+                        document.add(p4);
+            
+                        Calendar cal = new GregorianCalendar();
+                        int year = cal.get(Calendar.YEAR);
+                        int month = cal.get(Calendar.MONTH);
+                        int day = cal.get(Calendar.DAY_OF_MONTH);
+                        int hour = cal.get(Calendar.HOUR);
+                        int minute = cal.get(Calendar.MINUTE);
+                        String date = ("Ngày: "+day + " " + "Tháng: "+ (month + 1) + " " +"Năm "+ year);
+                        String time = ("Thời gian vào: " + hour +":"+minute);
+                        Font f5 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
+                        f5.setSize(8);
+                        f5.setColor(BaseColor.BLACK);
+                        Paragraph p5 = new Paragraph(time+                                                          "\nHà Nội , " + date, f5);
+                        Paragraph p6 = new Paragraph(" ");
+                        p5.setAlignment(Element.ALIGN_RIGHT);
+                        p6.setAlignment(Element.ALIGN_LEFT);
+                        document.add(p5);
+                        document.add(p6);
+                        
+                        Font f6 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
+                        f6.setSize(8);
+                        f6.setColor(BaseColor.BLACK);
+                        f6.setStyle(ITALIC);
+
+                        Font f7 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
+                        f7.setSize(8);
+                        f7.setColor(BaseColor.BLACK);
+                        
+                        PdfPTable t1 = new PdfPTable(new float[]{1,1,1,1});
+                        t1.setWidthPercentage(100);
+                        t1.setTotalWidth(120);
+                        t1.setSpacingBefore(0);
+                        t1.setSpacingAfter(0);
+//                        PdfPCell c11 = new PdfPCell(new Phrase("Mã Đồ Uống", f7));
+//                        t1.addCell(c11);
+                        PdfPCell c11 = new PdfPCell(new Phrase("Tên Đồ Uống", f7));
+                        t1.addCell(c11);
+                        PdfPCell c12 = new PdfPCell(new Phrase("Số Lượng", f7));
+                        t1.addCell(c12);
+                        PdfPCell c13 = new PdfPCell(new Phrase("Đơn Giá", f7));
+                        t1.addCell(c13);
+                        PdfPCell c14 = new PdfPCell(new Phrase("Thành Tiền", f7));
+                        t1.addCell(c14);
+//                        for (int i = 0; i < model.getRowCount(); i++) {
+//                            t1.addCell(new Phrase(model.getValueAt(i, 0).toString(), f7));
+//                            t1.addCell(new Phrase(model.getValueAt(i, 1).toString(), f7));
+//                            t1.addCell(new Phrase(model.getValueAt(i, 2).toString(), f7));
+//                            t1.addCell(new Phrase(model.getValueAt(i, 3).toString(), f7));
+////                            t1.addCell(new Phrase(model.getValueAt(i, 4).toString(), f7));
+//                        }
+                        document.add(t1);
+                        int Giat=0;
+                        Paragraph p7 = new Paragraph("\n\nTổng Tiền: " + (String.valueOf(Giat) + "VND\n"), f6);
+                        p3.setAlignment(Element.ALIGN_LEFT);
+                        document.add(p7);
+                        System.out.println("success");
+                        
+                        document.add(new Paragraph("Người Bán.                    Người Mua.", f6));
+                        document.add(new Paragraph("  (Ký)                           (Ký)   ", f6));
+                        
+                        document.close();
+                        JOptionPane.showMessageDialog(this, "Lưu file thành công");
+                        writer.close();
+                     }
+                 }
+                 catch (Exception ex){
+                     ex.printStackTrace();
+                 }
+             }
+         }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -672,7 +829,7 @@ public class Home extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                
+                new Home().setVisible(true);
             }
         });
 
@@ -685,6 +842,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
@@ -746,7 +904,7 @@ public class Home extends javax.swing.JFrame {
     }
 
     private void loadTable() {
-        Image imgEmpty = new ImageIcon(Home.class.getResource("/images/table_empty.png")).getImage();
+        Image imgEmpty = new ImageIcon(Home.class.getResource("/images/table_full.png")).getImage();
         ImageIcon iconEmpty = new ImageIcon(imgEmpty);
         Image imgFull = new ImageIcon(Home.class.getResource("/images/table_full.png")).getImage();
         ImageIcon iconFull = new ImageIcon(imgFull); // neu co khach thi doi mau
