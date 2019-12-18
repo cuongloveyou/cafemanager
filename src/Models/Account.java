@@ -13,8 +13,9 @@ public class Account {
     private String FullName;
     private String UserName;
     private String PassWord;
-
-    public Account(String FullName, String UserName, String PassWord, String Type) {
+    private int Type;
+    
+    public Account(String UserName, String PassWord, String FullName, int Type) {
         this.FullName = FullName;
         this.UserName = UserName;
         this.PassWord = PassWord;
@@ -47,13 +48,13 @@ public class Account {
         this.PassWord = PassWord;
     }
 
-    public String getType() {
+    public int getType() {
         return Type;
     }
 
-    public void setType(String Type) {
+    public void setType(int Type) {
         this.Type = Type;
     }
-    private String Type;
+   
     
 }
