@@ -104,4 +104,19 @@ public class StaffController {
             Connect.close();
         }
     }
+    public static int CheckUserName(String userName){
+        int check = 0;
+        try {
+            Statement statement = Connect.getConnection().createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM Account WHERE UserName = \'" + userName + "'");
+            if (rs.next()) {
+                check = 1;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StaffController.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            Connect.close();
+        }
+        return check;
+    }
 }
