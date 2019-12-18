@@ -5,25 +5,22 @@
  */
 package view;
 
-import Models.Bill;
 import Models.BillInfo;
 import Models.Food;
 import Models.FoodCategory;
 import Models.TableFood;
-import Models.Time;
 import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import static com.itextpdf.text.Font.ITALIC;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-//import com.itextpdf.text.Image;
+import com.itextpdf.text.pdf.PdfWriter;
 import controller.BillInfoController;
 import controller.FoodCategoryController;
 import controller.FoodController;
@@ -47,19 +44,19 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-
 /**
  *
  * @author Admin
  */
 public class Home extends javax.swing.JFrame {
-
+    String userName;
+    int type;
     ArrayList<FoodCategory> foodCategoryList;
 
     /**
      * Creates new form Home
      */
-    public Home() {
+    public Home(String UserName, int Type) {
         initComponents();
         this.setLocationRelativeTo(null);
         try {
@@ -68,6 +65,8 @@ public class Home extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.userName = UserName;
+        this.type = Type;
     }
 
     /**
@@ -633,8 +632,11 @@ public class Home extends javax.swing.JFrame {
 
     private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
         Staff staff = new Staff();
-        staff.setPower(false);
+        staff.setUserName(userName);
+        staff.loadStaff(userName);
+        //staff.setPower(false);
         staff.setVisible(true);
+    //    System.out.println(userName);
     }//GEN-LAST:event_jMenu3MouseClicked
 
     private void cbCategoryItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbCategoryItemStateChanged
@@ -674,60 +676,52 @@ public class Home extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel model=(DefaultTableModel) tbBillInfo.getModel();
-         if (model.getRowCount() == 0) {
+        DefaultTableModel model = (DefaultTableModel) tbBillInfo.getModel();
+//        DefaultTableModel model0 = (DefaultTableModel) jTable4.getModel();
+        if (model.getRowCount() == 0) {
             JOptionPane.showMessageDialog(null, "Chưa có dữ liệu để xuất file !");
         } else {
-             JFileChooser fc= new JFileChooser();
-             fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-             fc.setAcceptAllFileFilterUsed(false);
-             FileNameExtensionFilter ft= new FileNameExtensionFilter("PDF Document", "PDF");
-             fc.addChoosableFileFilter(ft);
-             int returnVal=fc.showSaveDialog(this);
-             if(returnVal == javax.swing.JFileChooser.APPROVE_OPTION){
-                 try {
-                     String FileName=fc.getSelectedFile().getName();
-                     String dir=fc.getCurrentDirectory().toString();
-                     File f= new File(dir +"\\" +FileName + ".pdf");
-                     
-                     if(f.exists()){
-                         JOptionPane.showMessageDialog(this, "Tệp tin đã tồn tại!");
-                     }
-                     else{
-                         Document document = new Document (PageSize.A4, 50, 50, 10, 50);
-                         PdfWriter writer;
-                         writer=PdfWriter.getInstance(document, new FileOutputStream(dir +"\\" + FileName +".pdf"));
-                         document.open();
-                         
+            JFileChooser chooser     = new JFileChooser();
+            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            chooser.setAcceptAllFileFilterUsed(false);
+            FileNameExtensionFilter ft = new FileNameExtensionFilter("PDF Documents", "pdf");
+            chooser.addChoosableFileFilter(ft);
+            int returnVal = chooser.showSaveDialog(this);
+            if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
+                try {
+                    String fileName = chooser.getSelectedFile().getName();
+                    String dir = chooser.getCurrentDirectory().toString();
+                    File f = new File(dir + "\\" + fileName + ".pdf");
+
+                    if (f.exists()) {
+                        JOptionPane.showMessageDialog(this, "Tên file đã tồn tại, mời bạn chọn tên khác !");
+                    } else {
+                        Document document = new Document(PageSize.A4, 50, 50, 10, 50);
+                        PdfWriter writer;
+                        writer = PdfWriter.getInstance(document, new FileOutputStream(dir + "\\" + fileName + ".pdf"));
+                        document.open();
+
                         Font f1 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
-                        f1.setSize(15);
+                        f1.setSize(10);
                         f1.setColor(BaseColor.BLACK);
-                        Paragraph p1=new Paragraph("CAFE MANAGER");
+                        Paragraph p1= new Paragraph("CAFE MANAGER", f1);
                         p1.setAlignment(Element.ALIGN_CENTER);
                         document.add(p1);
                         
-                        Font f3 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
-                        f3.setSize(15);
-                        f3.setColor(BaseColor.BLACK);
-                        Paragraph p3=new Paragraph("Group 7");
-                        p3.setAlignment(Element.ALIGN_CENTER);
-                        document.add(p3);
-                        
-                        Font f2 = new Font(BaseFont.createFont("/asset/vuArial.ttf",BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
-                        f2.setSize(10);
-                        f2.setColor(BaseColor.BLACK);
-                        Paragraph p2=new Paragraph("Vo Nguyen Giap street, Dong Anh district, Ha Noi");
+                        Font f11 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
+                        f11.setSize(9);
+                        f11.setColor(BaseColor.BLACK);
+                        Paragraph p2= new Paragraph("Địa chỉ: Đường Võ Nguyên Giáp, Ngọc Chi, Vĩnh Ngọc, Đông Anh, Hà Nội", f11);
                         p2.setAlignment(Element.ALIGN_CENTER);
                         document.add(p2);
-                        
-                        Font f4 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
-                        f4.setSize(20);
-                        f4.setColor(BaseColor.BLACK);
-//                        f4.setStyle(BOLD);
-                        Paragraph p4=new Paragraph("HÓA ĐƠN BÁN HÀNG",f4);
-                        p4.setAlignment(Element.ALIGN_CENTER);
-                        document.add(p4);
-            
+
+                        Font f2 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
+                        f2.setSize(16);
+                        f2.setColor(BaseColor.BLACK);
+                        Paragraph p = new Paragraph("HÓA ĐƠN BÁN HÀNG", f2);
+                        p.setAlignment(Element.ALIGN_CENTER);
+                        document.add(p);
+
                         Calendar cal = new GregorianCalendar();
                         int year = cal.get(Calendar.YEAR);
                         int month = cal.get(Calendar.MONTH);
@@ -735,68 +729,77 @@ public class Home extends javax.swing.JFrame {
                         int hour = cal.get(Calendar.HOUR);
                         int minute = cal.get(Calendar.MINUTE);
                         String date = ("Ngày: "+day + " " + "Tháng: "+ (month + 1) + " " +"Năm "+ year);
-                        String time = ("Thời gian vào: " + hour +":"+minute);
+                        String time = ("Thời gian vào: "+hour+" giờ "+minute+" phút" );
+                        Font f4 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
+                        f4.setSize(8);
+                        f4.setColor(BaseColor.BLACK);
+                        Paragraph p4 = new Paragraph("\nHà Nội , " + date, f4);
+                        Paragraph p5 = new Paragraph(time,f4);
+                        Paragraph p7 = new Paragraph("");
+                        p4.setAlignment(Element.ALIGN_RIGHT);
+                        p5.setAlignment(Element.ALIGN_RIGHT);
+                        document.add(p5);
+                        document.add(p4);
+                        document.add(p7);
+                        
                         Font f5 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
                         f5.setSize(8);
                         f5.setColor(BaseColor.BLACK);
-                        Paragraph p5 = new Paragraph(time+                                                          "\nHà Nội , " + date, f5);
-                        Paragraph p6 = new Paragraph(" ");
-                        p5.setAlignment(Element.ALIGN_RIGHT);
-                        p6.setAlignment(Element.ALIGN_LEFT);
-                        document.add(p5);
-                        document.add(p6);
-                        
-                        Font f6 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
-                        f6.setSize(8);
-                        f6.setColor(BaseColor.BLACK);
-                        f6.setStyle(ITALIC);
+                        f5.setStyle(ITALIC);
 
-                        Font f7 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
-                        f7.setSize(8);
-                        f7.setColor(BaseColor.BLACK);
-                        
+                        Font f3 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
+                        f3.setSize(8);
+                        f3.setColor(BaseColor.BLACK);
+
+                       
+                        // bang cac san pham 
                         PdfPTable t1 = new PdfPTable(new float[]{1,1,1,1});
                         t1.setWidthPercentage(100);
                         t1.setTotalWidth(120);
                         t1.setSpacingBefore(0);
                         t1.setSpacingAfter(0);
-//                        PdfPCell c11 = new PdfPCell(new Phrase("Mã Đồ Uống", f7));
+//                        PdfPCell c11 = new PdfPCell(new Phrase("Mã Sảm Phẩm", f7));
 //                        t1.addCell(c11);
-                        PdfPCell c11 = new PdfPCell(new Phrase("Tên Đồ Uống", f7));
-                        t1.addCell(c11);
-                        PdfPCell c12 = new PdfPCell(new Phrase("Số Lượng", f7));
+                        PdfPCell c12 = new PdfPCell(new Phrase("Tên Đồ Uống", f4));
                         t1.addCell(c12);
-                        PdfPCell c13 = new PdfPCell(new Phrase("Đơn Giá", f7));
+                        PdfPCell c13 = new PdfPCell(new Phrase("Số Lượng", f4));
                         t1.addCell(c13);
-                        PdfPCell c14 = new PdfPCell(new Phrase("Thành Tiền", f7));
+                        PdfPCell c14 = new PdfPCell(new Phrase("Đơn Giá", f4));
                         t1.addCell(c14);
+                        PdfPCell c15 = new PdfPCell(new Phrase("Thành Tiền", f4));
+                        t1.addCell(c15);
+                        //}
+
 //                        for (int i = 0; i < model.getRowCount(); i++) {
-//                            t1.addCell(new Phrase(model.getValueAt(i, 0).toString(), f7));
-//                            t1.addCell(new Phrase(model.getValueAt(i, 1).toString(), f7));
-//                            t1.addCell(new Phrase(model.getValueAt(i, 2).toString(), f7));
-//                            t1.addCell(new Phrase(model.getValueAt(i, 3).toString(), f7));
-////                            t1.addCell(new Phrase(model.getValueAt(i, 4).toString(), f7));
+//                            t1.addCell(new Phrase(model.getValueAt(i, 1).toString(), f3));
+//                            t1.addCell(new Phrase(model.getValueAt(i, 0).toString(), f3));
+//                            t1.addCell(new Phrase(model.getValueAt(i, 2).toString(), f3));
+//                            t1.addCell(new Phrase(model.getValueAt(i, 3).toString(), f3));
+//                            t1.addCell(new Phrase(model.getValueAt(i, 4).toString(), f3));
 //                        }
                         document.add(t1);
-                        int Giat=0;
-                        Paragraph p7 = new Paragraph("\n\nTổng Tiền: " + (String.valueOf(Giat) + "VND\n"), f6);
-                        p3.setAlignment(Element.ALIGN_LEFT);
-                        document.add(p7);
+                        int Giat = 0 ;
+                        Paragraph p6 = new Paragraph("\n\nTổng Tiền: " + (String.valueOf(Giat) + "VND\n"), f4);
+                        p6.setAlignment(Element.ALIGN_LEFT);
+                        document.add(p6);
                         System.out.println("success");
                         
-                        document.add(new Paragraph("Người Bán.                    Người Mua.", f6));
-                        document.add(new Paragraph("  (Ký)                           (Ký)   ", f6));
+                        document.add(new Paragraph("Người Bán.                    Người Mua.", f4));
+                        document.add(new Paragraph("  (Ký)                           (Ký)   ", f4));
                         
                         document.close();
-                        JOptionPane.showMessageDialog(this, "Lưu file thành công");
+                        JOptionPane.showMessageDialog(this, "Lưu file thành công !");
                         writer.close();
-                     }
-                 }
-                 catch (Exception ex){
-                     ex.printStackTrace();
-                 }
-             }
-         }
+                    }
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Hủy bỏ !");
+            }
+        }
+        
     }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
@@ -829,7 +832,7 @@ public class Home extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Home().setVisible(true);
+                
             }
         });
 
@@ -904,7 +907,7 @@ public class Home extends javax.swing.JFrame {
     }
 
     private void loadTable() {
-        Image imgEmpty = new ImageIcon(Home.class.getResource("/images/table_full.png")).getImage();
+        Image imgEmpty = new ImageIcon(Home.class.getResource("/images/table_empty.png")).getImage();
         ImageIcon iconEmpty = new ImageIcon(imgEmpty);
         Image imgFull = new ImageIcon(Home.class.getResource("/images/table_full.png")).getImage();
         ImageIcon iconFull = new ImageIcon(imgFull); // neu co khach thi doi mau
