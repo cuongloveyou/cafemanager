@@ -31,6 +31,10 @@ public class Bill {
         this.TimeCheckIn = TimeCheckIn;
         this.TimeCheckOut = TimeCheckOut;
     }
+
+    public Bill() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 
     public String getIDBill() {
