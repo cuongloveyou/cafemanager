@@ -5,11 +5,16 @@
  */
 package controller;
 
+import Models.Bill;
 import Models.Connect;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -18,6 +23,50 @@ import javax.swing.table.DefaultTableModel;
  * @author tranm
  */
 public class BillController {
+
+    public static int getIdBillByIdTable(int idTable) {
+        try {
+            Statement statement = Connect.getConnection().createStatement();
+            String sql = "select id from Bill where idTable = " + idTable + " and status = 0";
+            ResultSet resultSet = statement.executeQuery(sql);
+            int idBill = 0;
+            while (resultSet.next()) {                
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BillController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            Connect.close();
+        }
+            return 0;
+        
+    }
+    public static boolean updateDiscount(int discount, int idBill) {
+        try {
+            PreparedStatement preparedStatement = Connect.getConnection()
+                    .prepareStatement("update Bill set discount = " + discount + " where id = " + idBill);
+            if (preparedStatement.executeUpdate() == 1) {
+                    return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BillController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            Connect.close();
+        }
+        return false;
+    }
+
+    public static void updateIdTableByIdBill(int idBill, int idTable) {
+        try {
+            PreparedStatement preparedStatement = Connect.getConnection()
+                    .prepareStatement("update Bill set idTable = " + idTable + " where id = " + idBill);
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(BillController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Connect.close();
+        }
+    }
 
     public void loadDataBill(DefaultTableModel tbnBill,JTable tbBill) {
         try {
@@ -53,5 +102,25 @@ public class BillController {
         } finally{
             Connect.close();
         }
+    }
+    
+    public static int addNewBill(int idTable){
+        try {
+            PreparedStatement preparedStatement = Connect.getConnection()
+                    .prepareStatement("INSERT dbo.Bill (DataCheck, TimeCheckIn, TimeCheckOut, idTable , status )"
+                            + " VALUES  (GETDATE(), GETDATE(), NULL, " + idTable + ", 0)");
+            if (preparedStatement.executeUpdate() == 1) {
+                Connect.close();
+                preparedStatement = Connect.getConnection().prepareStatement("update TableFood set status = 1 where id = " + idTable);
+                if (preparedStatement.executeUpdate() == 1) {
+                    return 1;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BillController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            Connect.close();
+        }
+        return 0;
     }
 }

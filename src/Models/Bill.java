@@ -20,8 +20,9 @@ public class Bill {
     private String UserStaff;
     private String TimeCheckIn;
     private String TimeCheckOut;
+    private String Date;
 
-    public Bill(String IDBill, String Status, int Discount, int TotalPrice, String IDTable, String UserStaff, String TimeCheckIn, String TimeCheckOut) {
+    public Bill(String IDBill, String Date, String TimeCheckIn, String TimeCheckOut, String IDTable, String Status, int Discount, int TotalPrice, String UserStaff) {
         this.IDBill = IDBill;
         this.Status = Status;
         this.Discount = Discount;
@@ -30,10 +31,7 @@ public class Bill {
         this.UserStaff = UserStaff;
         this.TimeCheckIn = TimeCheckIn;
         this.TimeCheckOut = TimeCheckOut;
-    }
-
-    public Bill() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.Date = Date;
     }
     
 

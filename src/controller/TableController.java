@@ -7,6 +7,7 @@ package controller;
 
 import Models.Connect;
 import Models.TableFood;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -39,5 +40,29 @@ public class TableController {
             Connect.close();
         }
         return listTable;
+    }
+
+    public static void setTableEmpty(int idTable) {
+        try {
+            PreparedStatement preparedStatement = Connect.getConnection()
+                    .prepareStatement("update TableFood set status = 0 where id = " + idTable);
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(BillController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Connect.close();
+        }
+    }
+
+    public static void setTableFull(int idTable) {
+        try {
+            PreparedStatement preparedStatement = Connect.getConnection()
+                    .prepareStatement("update TableFood set status = 1 where id = " + idTable);
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(BillController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Connect.close();
+        }
     }
 }

@@ -21,12 +21,15 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import controller.BillController;
 import controller.BillInfoController;
 import controller.FoodCategoryController;
 import controller.FoodController;
 import controller.TableController;
 import java.awt.Image;
 import java.awt.event.ItemEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.SQLException;
@@ -36,22 +39,28 @@ import java.util.GregorianCalendar;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
  * @author Admin
  */
 public class Home extends javax.swing.JFrame {
+
     String userName;
     int type;
-    ArrayList<FoodCategory> foodCategoryList;
+    ArrayList<FoodCategory> foodCategoryList; // danh sách các món
+    ArrayList<Food> foodList; //danh sách món
+    ArrayList<TableFood> listTable; // danh sách bàn
+    private int idTable = 0; // bàn đang được chọn
+    ArrayList<JLabel> listLbTable = new ArrayList<>(); // list label bàn
+    ArrayList<JLabel> listLbTextTable = new ArrayList<>(); // list label ban
+
 
     /**
      * Creates new form Home
@@ -81,52 +90,53 @@ public class Home extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         cbCategory = new javax.swing.JComboBox<>();
         cbFood = new javax.swing.JComboBox<>();
-        jSpinner1 = new javax.swing.JSpinner();
+        spCount = new javax.swing.JSpinner();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jSpinner2 = new javax.swing.JSpinner();
+        spDiscount = new javax.swing.JSpinner();
         jButton3 = new javax.swing.JButton();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        cbListTable = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         tfTotal = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
         jLabel34 = new javax.swing.JLabel();
+        btnPrint = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbBillInfo = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         lbTable1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        lbTextTable1 = new javax.swing.JLabel();
+        lbTextTable2 = new javax.swing.JLabel();
         lbTable2 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        lbTextTable3 = new javax.swing.JLabel();
         lbTable3 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
+        lbTextTable4 = new javax.swing.JLabel();
         lbTable4 = new javax.swing.JLabel();
         lbTable5 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        lbTextTable5 = new javax.swing.JLabel();
+        lbTextTable6 = new javax.swing.JLabel();
         lbTable6 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
+        lbTextTable7 = new javax.swing.JLabel();
         lbTable7 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
+        lbTextTable8 = new javax.swing.JLabel();
         lbTable8 = new javax.swing.JLabel();
         lbTable9 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
+        lbTextTable9 = new javax.swing.JLabel();
+        lbTextTable10 = new javax.swing.JLabel();
         lbTable10 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
+        lbTextTable11 = new javax.swing.JLabel();
         lbTable11 = new javax.swing.JLabel();
-        jLabel24 = new javax.swing.JLabel();
+        lbTextTable12 = new javax.swing.JLabel();
         lbTable12 = new javax.swing.JLabel();
         lbTable13 = new javax.swing.JLabel();
-        jLabel27 = new javax.swing.JLabel();
-        jLabel28 = new javax.swing.JLabel();
+        lbTextTable13 = new javax.swing.JLabel();
+        lbTextTable14 = new javax.swing.JLabel();
         lbTable14 = new javax.swing.JLabel();
-        jLabel30 = new javax.swing.JLabel();
+        lbTextTable15 = new javax.swing.JLabel();
         lbTable15 = new javax.swing.JLabel();
-        jLabel32 = new javax.swing.JLabel();
+        lbTextTable16 = new javax.swing.JLabel();
         lbTable16 = new javax.swing.JLabel();
         jMenuBar2 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -152,10 +162,20 @@ public class Home extends javax.swing.JFrame {
         });
 
         jButton2.setText("Giảm giá");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Chuyển đến bàn");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbListTable.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setText("Tổng tiền");
@@ -171,8 +191,15 @@ public class Home extends javax.swing.JFrame {
         jLabel34.setForeground(new java.awt.Color(204, 204, 204));
         jLabel34.setText("CafeManager");
 
-        jButton5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton5.setText("IN HÓA ĐƠN");
+        btnPrint.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnPrint.setText("IN HÓA ĐƠN");
+        btnPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("Xóa món");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -189,19 +216,21 @@ public class Home extends javax.swing.JFrame {
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbCategory, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbFood, 0, 220, Short.MAX_VALUE)
+                            .addComponent(cbFood, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(spCount, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton5))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(spDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jButton3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                                .addComponent(cbListTable, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(62, 62, 62)
                         .addComponent(jLabel1)))
@@ -217,7 +246,7 @@ public class Home extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnPrint, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -230,16 +259,17 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(cbFood, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(spCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
-                    .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton3)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbListTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
@@ -247,7 +277,7 @@ public class Home extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnPrint, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel34))
         );
@@ -298,73 +328,84 @@ public class Home extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
         lbTable1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_empty.png"))); // NOI18N
-        lbTable1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lbTable1MouseClicked(evt);
-            }
-        });
+        lbTable1.setName("1"); // NOI18N
 
-        jLabel3.setText("Bàn 1");
+        lbTextTable1.setText("Bàn 1");
 
-        jLabel4.setText("Bàn 2");
+        lbTextTable2.setText("Bàn 2");
 
         lbTable2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_empty.png"))); // NOI18N
+        lbTable2.setName("2"); // NOI18N
 
-        jLabel6.setText("Bàn 3");
+        lbTextTable3.setText("Bàn 3");
 
         lbTable3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_empty.png"))); // NOI18N
+        lbTable3.setName("3"); // NOI18N
 
-        jLabel8.setText("Bàn 4");
+        lbTextTable4.setText("Bàn 4");
 
         lbTable4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_empty.png"))); // NOI18N
+        lbTable4.setName("4"); // NOI18N
 
         lbTable5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_empty.png"))); // NOI18N
+        lbTable5.setName("5"); // NOI18N
 
-        jLabel11.setText("Bàn 5");
+        lbTextTable5.setText("Bàn 5");
 
-        jLabel12.setText("Bàn 6");
+        lbTextTable6.setText("Bàn 6");
 
         lbTable6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_empty.png"))); // NOI18N
+        lbTable6.setName("6"); // NOI18N
 
-        jLabel14.setText("Bàn 7");
+        lbTextTable7.setText("Bàn 7");
 
         lbTable7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_empty.png"))); // NOI18N
+        lbTable7.setName("7"); // NOI18N
 
-        jLabel16.setText("Bàn 8");
+        lbTextTable8.setText("Bàn 8");
 
         lbTable8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_empty.png"))); // NOI18N
+        lbTable8.setName("8"); // NOI18N
 
         lbTable9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_empty.png"))); // NOI18N
+        lbTable9.setName("9"); // NOI18N
 
-        jLabel19.setText("Bàn 9");
+        lbTextTable9.setText("Bàn 9");
 
-        jLabel20.setText("Bàn 10");
+        lbTextTable10.setText("Bàn 10");
 
         lbTable10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_empty.png"))); // NOI18N
+        lbTable10.setName("10"); // NOI18N
 
-        jLabel22.setText("Bàn 11");
+        lbTextTable11.setText("Bàn 11");
 
         lbTable11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_empty.png"))); // NOI18N
+        lbTable11.setName("11"); // NOI18N
 
-        jLabel24.setText("Bàn 12");
+        lbTextTable12.setText("Bàn 12");
 
         lbTable12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_empty.png"))); // NOI18N
+        lbTable12.setName("12"); // NOI18N
 
         lbTable13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_empty.png"))); // NOI18N
+        lbTable13.setName("13"); // NOI18N
 
-        jLabel27.setText("Bàn 13");
+        lbTextTable13.setText("Bàn 13");
 
-        jLabel28.setText("Bàn 14");
+        lbTextTable14.setText("Bàn 14");
 
         lbTable14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_empty.png"))); // NOI18N
+        lbTable14.setName("14"); // NOI18N
 
-        jLabel30.setText("Bàn 15");
+        lbTextTable15.setText("Bàn 15");
 
         lbTable15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_empty.png"))); // NOI18N
+        lbTable15.setName("15"); // NOI18N
 
-        jLabel32.setText("Bàn 16");
+        lbTextTable16.setText("Bàn 16");
 
         lbTable16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/table_empty.png"))); // NOI18N
+        lbTable16.setName("16"); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -379,25 +420,25 @@ public class Home extends javax.swing.JFrame {
                                 .addComponent(lbTable1))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(48, 48, 48)
-                                .addComponent(jLabel3)))
+                                .addComponent(lbTextTable1)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbTable2)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(22, 22, 22)
-                                .addComponent(jLabel4)))
+                                .addComponent(lbTextTable2)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbTable3)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(22, 22, 22)
-                                .addComponent(jLabel6)))
+                                .addComponent(lbTextTable3)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbTable4)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(22, 22, 22)
-                                .addComponent(jLabel8))))
+                                .addComponent(lbTextTable4))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -406,73 +447,73 @@ public class Home extends javax.swing.JFrame {
                                     .addComponent(lbTable5)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(22, 22, 22)
-                                        .addComponent(jLabel11)))
+                                        .addComponent(lbTextTable5)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbTable6)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(22, 22, 22)
-                                        .addComponent(jLabel12)))
+                                        .addComponent(lbTextTable6)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbTable7)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(22, 22, 22)
-                                        .addComponent(jLabel14)))
+                                        .addComponent(lbTextTable7)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbTable8)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(22, 22, 22)
-                                        .addComponent(jLabel16))))
+                                        .addComponent(lbTextTable8))))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbTable9)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(22, 22, 22)
-                                        .addComponent(jLabel19)))
+                                        .addComponent(lbTextTable9)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbTable10)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(22, 22, 22)
-                                        .addComponent(jLabel20)))
+                                        .addComponent(lbTextTable10)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbTable11)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(22, 22, 22)
-                                        .addComponent(jLabel22)))
+                                        .addComponent(lbTextTable11)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbTable12)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(22, 22, 22)
-                                        .addComponent(jLabel24))))
+                                        .addComponent(lbTextTable12))))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbTable13)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(22, 22, 22)
-                                        .addComponent(jLabel27)))
+                                        .addComponent(lbTextTable13)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbTable14)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(22, 22, 22)
-                                        .addComponent(jLabel28)))
+                                        .addComponent(lbTextTable14)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbTable15)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(22, 22, 22)
-                                        .addComponent(jLabel30)))
+                                        .addComponent(lbTextTable15)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbTable16)
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(22, 22, 22)
-                                        .addComponent(jLabel32)))))))
+                                        .addComponent(lbTextTable16)))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -483,73 +524,73 @@ public class Home extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbTable4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel8))
+                        .addComponent(lbTextTable4))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbTable3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel6))
+                        .addComponent(lbTextTable3))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbTable2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4))
+                        .addComponent(lbTextTable2))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbTable1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)))
+                        .addComponent(lbTextTable1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbTable8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel16))
+                        .addComponent(lbTextTable8))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbTable7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel14))
+                        .addComponent(lbTextTable7))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbTable6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel12))
+                        .addComponent(lbTextTable6))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbTable5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel11)))
+                        .addComponent(lbTextTable5)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbTable12)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel24))
+                        .addComponent(lbTextTable12))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbTable11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel22))
+                        .addComponent(lbTextTable11))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbTable10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel20))
+                        .addComponent(lbTextTable10))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbTable9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel19)))
+                        .addComponent(lbTextTable9)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbTable16)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel32))
+                        .addComponent(lbTextTable16))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbTable15)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel30))
+                        .addComponent(lbTextTable15))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbTable14)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel28))
+                        .addComponent(lbTextTable14))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbTable13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel27)))
+                        .addComponent(lbTextTable13)))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
@@ -616,7 +657,24 @@ public class Home extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        if (this.idTable == 0) {
+            JOptionPane.showMessageDialog(null, "Chưa chọn bàn kìa má!!!");
+        } else if (listTable.get(this.idTable - 1).getStatus() == 0) {
+            BillController.addNewBill(this.idTable);
+            int idBill = BillController.getIdBillByIdTable(idTable);
+            int idFood = foodList.get(cbFood.getSelectedIndex()).getIDFood();
+            int count = (Integer) spCount.getValue();
+            addFoodToBill(idBill, idFood, count);
+            loadTableBillById(idTable);
+            loadTable();
+        } else {
+            int idBill = BillController.getIdBillByIdTable(idTable);
+            int idFood = foodList.get(cbFood.getSelectedIndex()).getIDFood();
+            int count = (Integer) spCount.getValue();
+            addFoodToBill(idBill, idFood, count);
+            loadTableBillById(idTable);
+            loadTable();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
@@ -636,7 +694,7 @@ public class Home extends javax.swing.JFrame {
         staff.loadStaff(userName);
         //staff.setPower(false);
         staff.setVisible(true);
-    //    System.out.println(userName);
+        //    System.out.println(userName);
     }//GEN-LAST:event_jMenu3MouseClicked
 
     private void cbCategoryItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbCategoryItemStateChanged
@@ -644,7 +702,7 @@ public class Home extends javax.swing.JFrame {
             cbFood.removeAllItems();
             int id = Integer.parseInt(foodCategoryList.get(cbCategory.getSelectedIndex()).getIDCategory());
             try {
-                ArrayList<Food> foodList = FoodController.getListFoodByIdCategory(id);
+                foodList = FoodController.getListFoodByIdCategory(id);
                 for (int i = 0; i < foodList.size(); i++) {
                     cbFood.addItem(foodList.get(i).getFoodName());
                 }
@@ -655,33 +713,14 @@ public class Home extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_cbCategoryItemStateChanged
 
-    private void lbTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbTable1MouseClicked
-        Vector data = new Vector();
-        DefaultTableModel dataModel = new DefaultTableModel();
-        ArrayList<BillInfo> listBillInfo = BillInfoController.getListBillInfoByIdTable(1);
-        ArrayList<Food> listFood = new ArrayList<>();
-        for (int i = 0; i < listBillInfo.size(); i++) {
-            listFood = FoodController.getNameAndPriceFoodByIdFood(listBillInfo.get(i).getIDFood());
-            System.out.println(listFood.get(0).getFoodName());
-            data.add(listFood.get(0).getFoodName());
-            int count = listBillInfo.get(i).getCount();
-            data.add(count);
-            int price = listFood.get(0).getPrice();
-            data.add(price);
-            data.add(count * price);
-            dataModel.addRow(data);
-        }
-        tbBillInfo.setModel(dataModel);
-    }//GEN-LAST:event_lbTable1MouseClicked
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) tbBillInfo.getModel();
 //        DefaultTableModel model0 = (DefaultTableModel) jTable4.getModel();
         if (model.getRowCount() == 0) {
             JOptionPane.showMessageDialog(null, "Chưa có dữ liệu để xuất file !");
         } else {
-            JFileChooser chooser     = new JFileChooser();
+            JFileChooser chooser = new JFileChooser();
             chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
             chooser.setAcceptAllFileFilterUsed(false);
             FileNameExtensionFilter ft = new FileNameExtensionFilter("PDF Documents", "pdf");
@@ -704,14 +743,14 @@ public class Home extends javax.swing.JFrame {
                         Font f1 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
                         f1.setSize(10);
                         f1.setColor(BaseColor.BLACK);
-                        Paragraph p1= new Paragraph("CAFE MANAGER", f1);
+                        Paragraph p1 = new Paragraph("CAFE MANAGER", f1);
                         p1.setAlignment(Element.ALIGN_CENTER);
                         document.add(p1);
-                        
+
                         Font f11 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
                         f11.setSize(9);
                         f11.setColor(BaseColor.BLACK);
-                        Paragraph p2= new Paragraph("Địa chỉ: Đường Võ Nguyên Giáp, Ngọc Chi, Vĩnh Ngọc, Đông Anh, Hà Nội", f11);
+                        Paragraph p2 = new Paragraph("Địa chỉ: Đường Võ Nguyên Giáp, Ngọc Chi, Vĩnh Ngọc, Đông Anh, Hà Nội", f11);
                         p2.setAlignment(Element.ALIGN_CENTER);
                         document.add(p2);
 
@@ -728,20 +767,20 @@ public class Home extends javax.swing.JFrame {
                         int day = cal.get(Calendar.DAY_OF_MONTH);
                         int hour = cal.get(Calendar.HOUR);
                         int minute = cal.get(Calendar.MINUTE);
-                        String date = ("Ngày: "+day + " " + "Tháng: "+ (month + 1) + " " +"Năm "+ year);
-                        String time = ("Thời gian vào: "+hour+" giờ "+minute+" phút" );
+                        String date = ("Ngày: " + day + " " + "Tháng: " + (month + 1) + " " + "Năm " + year);
+                        String time = ("Thời gian vào: " + hour + " giờ " + minute + " phút");
                         Font f4 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
                         f4.setSize(8);
                         f4.setColor(BaseColor.BLACK);
                         Paragraph p4 = new Paragraph("\nHà Nội , " + date, f4);
-                        Paragraph p5 = new Paragraph(time,f4);
+                        Paragraph p5 = new Paragraph(time, f4);
                         Paragraph p7 = new Paragraph("");
                         p4.setAlignment(Element.ALIGN_RIGHT);
                         p5.setAlignment(Element.ALIGN_RIGHT);
                         document.add(p5);
                         document.add(p4);
                         document.add(p7);
-                        
+
                         Font f5 = new Font(BaseFont.createFont("/asset/vuArial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED));
                         f5.setSize(8);
                         f5.setColor(BaseColor.BLACK);
@@ -751,9 +790,8 @@ public class Home extends javax.swing.JFrame {
                         f3.setSize(8);
                         f3.setColor(BaseColor.BLACK);
 
-                       
                         // bang cac san pham 
-                        PdfPTable t1 = new PdfPTable(new float[]{1,1,1,1});
+                        PdfPTable t1 = new PdfPTable(new float[]{1, 1, 1, 1});
                         t1.setWidthPercentage(100);
                         t1.setTotalWidth(120);
                         t1.setSpacingBefore(0);
@@ -778,15 +816,15 @@ public class Home extends javax.swing.JFrame {
 //                            t1.addCell(new Phrase(model.getValueAt(i, 4).toString(), f3));
 //                        }
                         document.add(t1);
-                        int Giat = 0 ;
+                        int Giat = 0;
                         Paragraph p6 = new Paragraph("\n\nTổng Tiền: " + (String.valueOf(Giat) + "VND\n"), f4);
                         p6.setAlignment(Element.ALIGN_LEFT);
                         document.add(p6);
                         System.out.println("success");
-                        
+
                         document.add(new Paragraph("Người Bán.                    Người Mua.", f4));
                         document.add(new Paragraph("  (Ký)                           (Ký)   ", f4));
-                        
+
                         document.close();
                         JOptionPane.showMessageDialog(this, "Lưu file thành công !");
                         writer.close();
@@ -799,8 +837,70 @@ public class Home extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Hủy bỏ !");
             }
         }
-        
+
+    }//GEN-LAST:event_btnPrintActionPerformed
+
+    private void tableMouseClicked() {
+        for (JLabel jLabel : listLbTable) {
+            jLabel.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    int i = Integer.parseInt(jLabel.getName());
+                    idTable = i;
+                    loadTableBillById(i);
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                }
+            });
+        }
+    }
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        if (tbBillInfo.getSelectedRow() == -1) { // neu chua chon mon can xoa
+            JOptionPane.showMessageDialog(null, "Chọn món để xóa đã kìa...");
+        } else {
+            String nameFood = tbBillInfo.getValueAt(tbBillInfo.getSelectedRow(), 0).toString();
+            System.out.println(nameFood);
+            int idBill = BillController.getIdBillByIdTable(idTable);
+            if (BillInfoController.deleteFood(nameFood, idBill)) {
+                loadTableBillById(idTable);
+            } else {
+                JOptionPane.showMessageDialog(null, "Uii.. Có lỗi rồi đại vương ơi!!!");
+            }
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int idBill = BillController.getIdBillByIdTable(idTable);
+        BillController.updateDiscount((Integer) spDiscount.getValue(), idBill);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        if (listTable.get(cbListTable.getSelectedIndex()).getStatus() == 0) { // ban dang rong thi moi duoc chuyen
+            int idBill = BillController.getIdBillByIdTable(idTable);
+            TableController.setTableEmpty(idTable); // xoa ban cu
+            idTable = cbListTable.getSelectedIndex() + 1;
+            TableController.setTableFull(idTable); // them ban moi
+            BillController.updateIdTableByIdBill(idBill, idTable); // update trong bill
+            loadTable();
+        } else {
+            JOptionPane.showMessageDialog(null, "Bàn đang có người kìa má...");
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -832,39 +932,24 @@ public class Home extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                
+
             }
         });
 
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnPrint;
     private javax.swing.JComboBox<String> cbCategory;
     private javax.swing.JComboBox<String> cbFood;
+    private javax.swing.JComboBox<String> cbListTable;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel24;
-    private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel34;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -873,8 +958,6 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JSpinner jSpinner2;
     private javax.swing.JLabel lbTable1;
     private javax.swing.JLabel lbTable10;
     private javax.swing.JLabel lbTable11;
@@ -891,6 +974,24 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel lbTable7;
     private javax.swing.JLabel lbTable8;
     private javax.swing.JLabel lbTable9;
+    private javax.swing.JLabel lbTextTable1;
+    private javax.swing.JLabel lbTextTable10;
+    private javax.swing.JLabel lbTextTable11;
+    private javax.swing.JLabel lbTextTable12;
+    private javax.swing.JLabel lbTextTable13;
+    private javax.swing.JLabel lbTextTable14;
+    private javax.swing.JLabel lbTextTable15;
+    private javax.swing.JLabel lbTextTable16;
+    private javax.swing.JLabel lbTextTable2;
+    private javax.swing.JLabel lbTextTable3;
+    private javax.swing.JLabel lbTextTable4;
+    private javax.swing.JLabel lbTextTable5;
+    private javax.swing.JLabel lbTextTable6;
+    private javax.swing.JLabel lbTextTable7;
+    private javax.swing.JLabel lbTextTable8;
+    private javax.swing.JLabel lbTextTable9;
+    private javax.swing.JSpinner spCount;
+    private javax.swing.JSpinner spDiscount;
     private javax.swing.JTable tbBillInfo;
     private javax.swing.JTextField tfTotal;
     // End of variables declaration//GEN-END:variables
@@ -904,6 +1005,43 @@ public class Home extends javax.swing.JFrame {
         for (int i = 0; i < foodList.size(); i++) {
             cbFood.addItem(foodList.get(i).getFoodName());
         }
+        // push cac text ban vao list
+        listLbTextTable.add(lbTextTable1);
+        listLbTextTable.add(lbTextTable2);
+        listLbTextTable.add(lbTextTable3);
+        listLbTextTable.add(lbTextTable4);
+        listLbTextTable.add(lbTextTable5);
+        listLbTextTable.add(lbTextTable6);
+        listLbTextTable.add(lbTextTable7);
+        listLbTextTable.add(lbTextTable8);
+        listLbTextTable.add(lbTextTable9);
+        listLbTextTable.add(lbTextTable10);
+        listLbTextTable.add(lbTextTable11);
+        listLbTextTable.add(lbTextTable12);
+        listLbTextTable.add(lbTextTable13);
+        listLbTextTable.add(lbTextTable14);
+        listLbTextTable.add(lbTextTable15);
+        listLbTextTable.add(lbTextTable16);
+
+        // push cac label vao list
+        listLbTable.add(lbTable1);
+        listLbTable.add(lbTable2);
+        listLbTable.add(lbTable3);
+        listLbTable.add(lbTable4);
+        listLbTable.add(lbTable5);
+        listLbTable.add(lbTable6);
+        listLbTable.add(lbTable7);
+        listLbTable.add(lbTable8);
+        listLbTable.add(lbTable9);
+        listLbTable.add(lbTable10);
+        listLbTable.add(lbTable11);
+        listLbTable.add(lbTable12);
+        listLbTable.add(lbTable13);
+        listLbTable.add(lbTable14);
+        listLbTable.add(lbTable15);
+        listLbTable.add(lbTable16);
+
+        tableMouseClicked();
     }
 
     private void loadTable() {
@@ -911,23 +1049,61 @@ public class Home extends javax.swing.JFrame {
         ImageIcon iconEmpty = new ImageIcon(imgEmpty);
         Image imgFull = new ImageIcon(Home.class.getResource("/images/table_full.png")).getImage();
         ImageIcon iconFull = new ImageIcon(imgFull); // neu co khach thi doi mau
-        ArrayList<TableFood> listTable = TableController.getListTable();
-        if (listTable.get(0).getStatus() == 1) lbTable1.setIcon(iconFull); else lbTable1.setIcon(iconEmpty);
-        if (listTable.get(1).getStatus() == 1) lbTable2.setIcon(iconFull); else lbTable1.setIcon(iconEmpty);
-        if (listTable.get(2).getStatus() == 1) lbTable3.setIcon(iconFull); else lbTable1.setIcon(iconEmpty);
-        if (listTable.get(3).getStatus() == 1) lbTable4.setIcon(iconFull); else lbTable1.setIcon(iconEmpty);
-        if (listTable.get(4).getStatus() == 1) lbTable5.setIcon(iconFull); else lbTable1.setIcon(iconEmpty);
-        if (listTable.get(5).getStatus() == 1) lbTable6.setIcon(iconFull); else lbTable1.setIcon(iconEmpty);
-        if (listTable.get(6).getStatus() == 1) lbTable7.setIcon(iconFull); else lbTable1.setIcon(iconEmpty);
-        if (listTable.get(7).getStatus() == 1) lbTable8.setIcon(iconFull); else lbTable1.setIcon(iconEmpty);
-        if (listTable.get(8).getStatus() == 1) lbTable9.setIcon(iconFull); else lbTable1.setIcon(iconEmpty);
-        if (listTable.get(9).getStatus() == 1) lbTable10.setIcon(iconFull); else lbTable1.setIcon(iconEmpty);
-        if (listTable.get(10).getStatus() == 1) lbTable11.setIcon(iconFull); else lbTable1.setIcon(iconEmpty);
-        if (listTable.get(11).getStatus() == 1) lbTable12.setIcon(iconFull); else lbTable1.setIcon(iconEmpty);
-        if (listTable.get(12).getStatus() == 1) lbTable13.setIcon(iconFull); else lbTable1.setIcon(iconEmpty);
-        if (listTable.get(13).getStatus() == 1) lbTable14.setIcon(iconFull); else lbTable1.setIcon(iconEmpty);
-        if (listTable.get(14).getStatus() == 1) lbTable15.setIcon(iconFull); else lbTable1.setIcon(iconEmpty);
-        if (listTable.get(15).getStatus() == 1) lbTable16.setIcon(iconFull); else lbTable1.setIcon(iconEmpty);
+        listTable = TableController.getListTable();
+        for (int i = 0; i < listLbTable.size(); i++) {
+            if (listTable.get(i).getStatus() == 1) {
+                listLbTable.get(i).setIcon(iconFull);
+            } else {
+                listLbTable.get(i).setIcon(iconEmpty);
+            }
+        }
+    }
+
+    private void loadTableBillById(int idTable) {
+        Vector column, data;
+        DefaultTableModel dataModel = new DefaultTableModel();
+        int idBill = BillController.getIdBillByIdTable(idTable);
+        ArrayList<BillInfo> listBillInfo = BillInfoController.getListBillInfoByIdBill(idBill);
+        ArrayList<Food> listFood = new ArrayList<>();
+        column = new Vector();
+        column.add("Tên món");
+        column.add("Số lượng");
+        column.add("Đơn giá");
+        column.add("Thành tiền");
+        dataModel.setColumnIdentifiers(column);
+
+        for (int i = 0; i < listBillInfo.size(); i++) {
+            data = new Vector();
+            listFood = FoodController.getNameAndPriceFoodByIdFood(listBillInfo.get(i).getIDFood());
+            data.add(listFood.get(0).getFoodName());
+            int count = listBillInfo.get(i).getCount();
+            data.add(count);
+            int price = listFood.get(0).getPrice();
+            data.add(price);
+            data.add(count * price);
+            dataModel.addRow(data);
+        }
+        tbBillInfo.setModel(dataModel);
+
+        //set Bold Table Name
+        String lbTextTable = "Bàn " + idTable;
+        for (int i = 0; i < listLbTextTable.size(); i++) {
+            if (listLbTextTable.get(i).getText().equals(lbTextTable)) {
+                listLbTextTable.get(i).setFont(new java.awt.Font("Tahoma", java.awt.Font.BOLD, 11));
+            } else {
+                listLbTextTable.get(i).setFont(new java.awt.Font("Tahoma", java.awt.Font.PLAIN, 11));
+            }
+        }
+    }
+
+    private void addFoodToBill(int idBill, int idFood, int count) {
+        if (BillInfoController.tryUpdateFood(idBill, idFood, count)) { // kiểm tra món đã có trong hóa đơn chưa và thêm món
+            JOptionPane.showMessageDialog(null, "Lại được thêm bạc rồi ^_^");
+        } else if (BillInfoController.addNewFood(idBill, idFood, count) == 1) {
+            JOptionPane.showMessageDialog(null, "Lại được thêm bạc rồi ^_^");
+        } else {
+            JOptionPane.showMessageDialog(null, "Uii.. Có lỗi rồi đại vương ơi!!!");
+        }
     }
 
 }

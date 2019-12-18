@@ -189,10 +189,7 @@ public class FoodController {
             while (resultSet.next()) {
                 String name = resultSet.getString(1);
                 int price = resultSet.getInt(2);
-                System.out.println("1"+name);
-                System.out.println("2"+price);
-                Food food = new Food(idFood, name, 0, price);
-                arrayList.add(food);
+                arrayList.add(new Food(idFood, name, 0, price));
             };
         } catch (SQLException ex) {
             Logger.getLogger(FoodController.class.getName()).log(Level.SEVERE, null, ex);
