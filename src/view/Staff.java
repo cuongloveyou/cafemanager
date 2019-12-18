@@ -350,18 +350,23 @@ public class Staff extends javax.swing.JFrame {
 
     public void findStaff(){
         String userName = tfFindStaff.getText();
-        
-        guestAccount = StaffController.loadInfor(userName);
-        loadAcountToView(guestAccount);
-        if(guestAccount.equals(myAccount)){
+        int check = StaffController.CheckUserName(userName);
+        if (check == 1) {
+            guestAccount = StaffController.loadInfor(userName);
+            loadAcountToView(guestAccount);
+            if(guestAccount.equals(myAccount)){
             
-        }else{
-            tfPassWordNew.setEnabled(false);
-            tfRepeatPassWord.setEnabled(false);
-            PassWordOld.setEnabled(false);
+            }else{
+                tfPassWordNew.setEnabled(false);
+                tfRepeatPassWord.setEnabled(false);
+                PassWordOld.setEnabled(false);
+            }
+            if (guestAccount.getType() == 1) {
+                btnDeleteStaff.setEnabled(false);
+            }
         }
-        if (guestAccount.getType() == 1) {
-            btnDeleteStaff.setEnabled(false);
+        else{
+            JOptionPane.showMessageDialog(this, "Bác này không có trong danh sách ^_^");
         }
     }
     /**

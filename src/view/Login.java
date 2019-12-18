@@ -67,7 +67,6 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        tfAccount.setText("rwus");
         tfAccount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tfAccountActionPerformed(evt);
@@ -79,7 +78,6 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        passwordField.setText("1");
         passwordField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 passwordFieldKeyPressed(evt);
