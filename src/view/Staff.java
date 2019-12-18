@@ -5,11 +5,21 @@
  */
 package view;
 
+import Models.Account;
+import controller.StaffController;
+import java.awt.event.KeyEvent;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author qcuon
  */
 public class Staff extends javax.swing.JFrame {
+
+    String UserName;
+    Account myAccount;
+    Account guestAccount;
 
     /**
      * Creates new form Staff
@@ -18,6 +28,29 @@ public class Staff extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
     }
+
+    public void setUserName(String UserNames) {
+        this.UserName = UserNames;
+
+    }
+
+    public void loadStaff(String UserName) {
+        myAccount = StaffController.loadInfor(UserName);
+        guestAccount = myAccount;
+        loadAcountToView(myAccount);
+    }
+
+    public void loadAcountToView(Account account) {
+        tfFullName.setText(account.getFullName());
+        tfUserName.setText(account.getUserName());
+        tfFindStaff.setText(account.getUserName());
+        if (account.getType() == 1) {
+            cbPower.setSelectedIndex(1);
+        } else {
+            cbPower.setSelectedIndex(0);
+        }
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,8 +62,6 @@ public class Staff extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        tfIdStaff = new javax.swing.JTextField();
         btnFindStaff = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -42,19 +73,17 @@ public class Staff extends javax.swing.JFrame {
         btnAddStaff = new javax.swing.JButton();
         btnUpdateStaff = new javax.swing.JButton();
         btnDeleteStaff = new javax.swing.JButton();
-        tfIdStaff6 = new javax.swing.JTextField();
-        tfIdStaff7 = new javax.swing.JTextField();
-        tfIdStaff8 = new javax.swing.JTextField();
-        tfIdStaff9 = new javax.swing.JTextField();
-        tfIdStaff10 = new javax.swing.JTextField();
+        tfFullName = new javax.swing.JTextField();
+        tfUserName = new javax.swing.JTextField();
+        tfFindStaff = new javax.swing.JTextField();
+        PassWordOld = new javax.swing.JPasswordField();
+        tfPassWordNew = new javax.swing.JPasswordField();
+        tfRepeatPassWord = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("Thông tin nhân viên");
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel2.setText("Mã nhân viên:");
 
         btnFindStaff.setText("Tìm kiếm");
         btnFindStaff.addActionListener(new java.awt.event.ActionListener() {
@@ -76,7 +105,7 @@ public class Staff extends javax.swing.JFrame {
         jLabel6.setText("Mật khẩu mới:");
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel7.setText("Mật khẩu cũ:");
+        jLabel7.setText("Nhập lại mật khẩu:");
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel8.setText("Cấp quyền:");
@@ -104,29 +133,36 @@ public class Staff extends javax.swing.JFrame {
             }
         });
 
+        tfFullName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfFullNameActionPerformed(evt);
+            }
+        });
+
+        tfFindStaff.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfFindStaffActionPerformed(evt);
+            }
+        });
+        tfFindStaff.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tfFindStaffKeyPressed(evt);
+            }
+        });
+
+        tfPassWordNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfPassWordNewActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(107, 107, 107))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(tfIdStaff, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(82, 82, 82)
-                                .addComponent(btnFindStaff))
-                            .addComponent(tfIdStaff6, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(21, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnAddStaff, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -138,20 +174,39 @@ public class Staff extends javax.swing.JFrame {
                                 .addComponent(jLabel8)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(cbPower, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(tfUserName, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
+                                    .addComponent(PassWordOld)
+                                    .addComponent(tfPassWordNew)
+                                    .addComponent(tfRepeatPassWord))
+                                .addContainerGap())
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(56, 56, 56)
                                 .addComponent(btnUpdateStaff)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnDeleteStaff, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(26, 26, 26))
-                            .addGroup(layout.createSequentialGroup()
+                                .addGap(26, 26, 26))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(tfFindStaff)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cbPower, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tfIdStaff7, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tfIdStaff8, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tfIdStaff9, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tfIdStaff10, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                .addComponent(btnFindStaff)
+                                .addGap(41, 41, 41))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(tfFullName, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(107, 107, 107))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,29 +215,28 @@ public class Staff extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(tfIdStaff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnFindStaff))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3)
-                    .addComponent(tfIdStaff6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnFindStaff)
+                    .addComponent(tfFindStaff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(9, 9, 9)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(tfFullName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(tfIdStaff7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(tfIdStaff8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(PassWordOld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel6)
-                    .addComponent(tfIdStaff9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfPassWordNew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(tfIdStaff10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfRepeatPassWord, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
@@ -192,38 +246,124 @@ public class Staff extends javax.swing.JFrame {
                     .addComponent(btnAddStaff)
                     .addComponent(btnUpdateStaff)
                     .addComponent(btnDeleteStaff))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnFindStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindStaffActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnFindStaffActionPerformed
-
     private void btnAddStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddStaffActionPerformed
         // TODO add your handling code here:
+        String userName = tfUserName.getText();
+        String fullName = tfFullName.getText();
+        String passWord = tfPassWordNew.getText();
+        String repeatPassWord = tfRepeatPassWord.getText();
+        int type = cbPower.getSelectedIndex();
+        if (userName == null || passWord == null || repeatPassWord == null) {
+            JOptionPane.showMessageDialog(this, "Chưa nhập đủ thông tin!!!");
+        } else if (StaffController.loadInfor(userName) == null) {
+            if (passWord.equals(repeatPassWord)) {
+                StaffController.AddStaff(fullName, userName, passWord, type);
+            } else {
+                JOptionPane.showMessageDialog(this, "Mật khẩu không đồng nhất!!!");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Azoo, thằng này có account zồi!!!");
+        }
     }//GEN-LAST:event_btnAddStaffActionPerformed
 
     private void btnUpdateStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateStaffActionPerformed
         // TODO add your handling code here:
+        String fullName = tfFullName.getText();
+        String userName = tfUserName.getText();
+        String accountName = tfFindStaff.getText();
+        String passWordOld = PassWordOld.getText();
+        String passWordNew = tfPassWordNew.getText();
+        String repeatPassWord = tfRepeatPassWord.getText();
+        int type = cbPower.getSelectedIndex();
+        if(fullName.equals(null)||userName.equals(null)){
+            JOptionPane.showMessageDialog(this, "Kiểm tra nhập đầy đủ thông tin @_@");
+        }
+        else{
+            if (userName.equals(guestAccount.getUserName())) {
+                if (guestAccount.getUserName().equals(myAccount.getUserName())) {
+                    if (passWordOld.equals(myAccount.getPassWord())){
+                        if (passWordNew.equals(repeatPassWord)) {
+                            if (passWordNew.equals("")){
+                                StaffController.EditMySelf(fullName, passWordOld,type, myAccount.getUserName());
+                            }
+                            else StaffController.EditMySelf(fullName, passWordNew,type, myAccount.getUserName());
+                        }else JOptionPane.showMessageDialog(this, "Mật khẩu không đồng nhất.");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(this, "Sai mật khẩu cũ rồi *-* \nNhập lại nha!!");
+                    }
+                }
+                else{
+                    StaffController.EditStaff(fullName, type,userName);
+                }
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "Không được đổi tên đăng nhập!!!");
+            }
+        }
     }//GEN-LAST:event_btnUpdateStaffActionPerformed
 
     private void btnDeleteStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteStaffActionPerformed
         // TODO add your handling code here:
+        String userName = tfUserName.getText();
+        StaffController.DeleteStaff(userName);
     }//GEN-LAST:event_btnDeleteStaffActionPerformed
 
-    public void setPower(boolean isAdmin){
+    private void btnFindStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindStaffActionPerformed
+        // TODO add your handling code here:
+        findStaff();
+    }//GEN-LAST:event_btnFindStaffActionPerformed
+
+    private void tfFullNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfFullNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfFullNameActionPerformed
+
+    private void tfPassWordNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfPassWordNewActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfPassWordNewActionPerformed
+
+    private void tfFindStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfFindStaffActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfFindStaffActionPerformed
+
+    private void tfFindStaffKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfFindStaffKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            findStaff();
+        }
+    }//GEN-LAST:event_tfFindStaffKeyPressed
+
+    public void setPower(boolean isAdmin) {
         if (!isAdmin) {
-            tfIdStaff.setEnabled(false);
             btnFindStaff.setEnabled(false);
             btnAddStaff.setEnabled(false);
             btnDeleteStaff.setEnabled(false);
-            cbPower.setEnabled(false);           
+            cbPower.setEnabled(false);
         }
     }
-    
+
+    public void findStaff(){
+        String userName = tfFindStaff.getText();
+        
+        guestAccount = StaffController.loadInfor(userName);
+        loadAcountToView(guestAccount);
+        if(guestAccount.equals(myAccount)){
+            
+        }else{
+            tfPassWordNew.setEnabled(false);
+            tfRepeatPassWord.setEnabled(false);
+            PassWordOld.setEnabled(false);
+        }
+        if (guestAccount.getType() == 1) {
+            btnDeleteStaff.setEnabled(false);
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -260,24 +400,23 @@ public class Staff extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPasswordField PassWordOld;
     private javax.swing.JButton btnAddStaff;
     private javax.swing.JButton btnDeleteStaff;
     private javax.swing.JButton btnFindStaff;
     private javax.swing.JButton btnUpdateStaff;
     private javax.swing.JComboBox<String> cbPower;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JTextField tfIdStaff;
-    private javax.swing.JTextField tfIdStaff10;
-    private javax.swing.JTextField tfIdStaff6;
-    private javax.swing.JTextField tfIdStaff7;
-    private javax.swing.JTextField tfIdStaff8;
-    private javax.swing.JTextField tfIdStaff9;
+    private javax.swing.JTextField tfFindStaff;
+    private javax.swing.JTextField tfFullName;
+    private javax.swing.JPasswordField tfPassWordNew;
+    private javax.swing.JPasswordField tfRepeatPassWord;
+    private javax.swing.JTextField tfUserName;
     // End of variables declaration//GEN-END:variables
 }

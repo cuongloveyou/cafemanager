@@ -5,6 +5,7 @@
  */
 package view;
 
+import Models.Account;
 import controller.LoginController;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -66,6 +67,7 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        tfAccount.setText("rwus");
         tfAccount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tfAccountActionPerformed(evt);
@@ -77,6 +79,7 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        passwordField.setText("1");
         passwordField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 passwordFieldKeyPressed(evt);
@@ -201,8 +204,9 @@ public class Login extends javax.swing.JFrame {
 
     private void login() {
         try {
-            if (LoginController.checkAccount(tfAccount.getText(), passwordField.getText())) {
-                Home home = new Home();
+            Account account = LoginController.checkAccount(tfAccount.getText(), passwordField.getText());
+            if (account != null) {
+                Home home = new Home(account.getUserName(), account.getType());
                 home.setVisible(true);
                 Login.this.setVisible(false);
             } else {

@@ -23,30 +23,9 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="107" max="-2" attributes="0"/>
-          </Group>
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="tfIdStaff" min="-2" pref="35" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="82" max="-2" attributes="0"/>
-                              <Component id="btnFindStaff" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="tfIdStaff6" alignment="0" min="-2" pref="259" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace pref="21" max="32767" attributes="0"/>
-                  </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="btnAddStaff" min="-2" pref="72" max="-2" attributes="0"/>
@@ -59,27 +38,52 @@
                           </Group>
                       </Group>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="cbPower" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace pref="18" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="tfUserName" pref="259" max="32767" attributes="0"/>
+                                  <Component id="PassWordOld" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="tfPassWordNew" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="tfRepeatPassWord" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
                               <Component id="btnUpdateStaff" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="btnDeleteStaff" min="-2" pref="72" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" attributes="0">
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="tfFindStaff" max="32767" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="cbPower" min="-2" max="-2" attributes="0"/>
-                                  <Component id="tfIdStaff7" alignment="0" min="-2" pref="259" max="-2" attributes="0"/>
-                                  <Component id="tfIdStaff8" alignment="0" min="-2" pref="259" max="-2" attributes="0"/>
-                                  <Component id="tfIdStaff9" alignment="0" min="-2" pref="259" max="-2" attributes="0"/>
-                                  <Component id="tfIdStaff10" alignment="0" min="-2" pref="259" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="btnFindStaff" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="tfFullName" min="-2" pref="259" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
               </Group>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="107" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -90,34 +94,33 @@
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="tfIdStaff" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnFindStaff" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                  <Component id="tfIdStaff6" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfFindStaff" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="tfIdStaff7" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfFullName" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfUserName" min="-2" pref="20" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="tfIdStaff8" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="PassWordOld" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="tfIdStaff9" alignment="3" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfPassWordNew" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="tfIdStaff10" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="tfRepeatPassWord" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -130,7 +133,7 @@
                   <Component id="btnUpdateStaff" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnDeleteStaff" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="26" max="32767" attributes="0"/>
+              <EmptySpace pref="23" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -143,16 +146,6 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Th&#xf4;ng tin nh&#xe2;n vi&#xea;n"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="jLabel2">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Tahoma" size="14" style="0"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="M&#xe3; nh&#xe2;n vi&#xea;n:"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="tfIdStaff">
     </Component>
     <Component class="javax.swing.JButton" name="btnFindStaff">
       <Properties>
@@ -199,7 +192,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Tahoma" size="14" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="M&#x1ead;t kh&#x1ea9;u c&#x169;:"/>
+        <Property name="text" type="java.lang.String" value="Nh&#x1ead;p l&#x1ea1;i m&#x1ead;t kh&#x1ea9;u:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel8">
@@ -247,15 +240,27 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteStaffActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="tfIdStaff6">
+    <Component class="javax.swing.JTextField" name="tfFullName">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfFullNameActionPerformed"/>
+      </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="tfIdStaff7">
+    <Component class="javax.swing.JTextField" name="tfUserName">
     </Component>
-    <Component class="javax.swing.JTextField" name="tfIdStaff8">
+    <Component class="javax.swing.JTextField" name="tfFindStaff">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfFindStaffActionPerformed"/>
+        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="tfFindStaffKeyPressed"/>
+      </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="tfIdStaff9">
+    <Component class="javax.swing.JPasswordField" name="PassWordOld">
     </Component>
-    <Component class="javax.swing.JTextField" name="tfIdStaff10">
+    <Component class="javax.swing.JPasswordField" name="tfPassWordNew">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfPassWordNewActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JPasswordField" name="tfRepeatPassWord">
     </Component>
   </SubComponents>
 </Form>
