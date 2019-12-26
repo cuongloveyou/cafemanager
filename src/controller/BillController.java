@@ -7,6 +7,7 @@ package controller;
 
 import Models.Bill;
 import Models.Connect;
+import Models.Food;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -30,27 +31,28 @@ public class BillController {
             String sql = "select id from Bill where idTable = " + idTable + " and status = 0";
             ResultSet resultSet = statement.executeQuery(sql);
             int idBill = 0;
-            while (resultSet.next()) {                
+            while (resultSet.next()) {
                 return resultSet.getInt(1);
             }
         } catch (SQLException ex) {
             Logger.getLogger(BillController.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
+        } finally {
             Connect.close();
         }
-            return 0;
-        
+        return 0;
+
     }
+
     public static boolean updateDiscount(int discount, int idBill) {
         try {
             PreparedStatement preparedStatement = Connect.getConnection()
                     .prepareStatement("update Bill set discount = " + discount + " where id = " + idBill);
             if (preparedStatement.executeUpdate() == 1) {
-                    return true;
+                return true;
             }
         } catch (SQLException ex) {
             Logger.getLogger(BillController.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
+        } finally {
             Connect.close();
         }
         return false;
@@ -68,7 +70,35 @@ public class BillController {
         }
     }
 
-    public void loadDataBill(DefaultTableModel tbnBill,JTable tbBill) {
+    public static void payBillByIdTable(int idTable, int total, String userName) {
+        try {
+            PreparedStatement preparedStatement = Connect.getConnection()
+                    .prepareStatement("update Bill set status = 1, totalPrice = " + total + ", TimeCheckOut = GETDATE(), userStaff = \'" + userName + "\' where idTable = " + idTable + " and status = 0");
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(BillController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Connect.close();
+        }
+    }
+
+    public static int getDiscountByIdBill(int idBill) {
+        try {
+            Statement statement = Connect.getConnection().createStatement();
+            String sql = "select discount from Bill where id = " + idBill;
+            ResultSet resultSet = statement.executeQuery(sql);
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            };
+        } catch (SQLException ex) {
+            Logger.getLogger(BillController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Connect.close();
+        }
+        return 0;
+    }
+
+    public void loadDataBill(DefaultTableModel tbnBill, JTable tbBill) {
         try {
             int number;
             Vector row, column;
@@ -99,12 +129,12 @@ public class BillController {
             }
         } catch (Exception ex) {
             System.out.println(ex.toString());
-        } finally{
+        } finally {
             Connect.close();
         }
     }
-    
-    public static int addNewBill(int idTable){
+
+    public static int addNewBill(int idTable) {
         try {
             PreparedStatement preparedStatement = Connect.getConnection()
                     .prepareStatement("INSERT dbo.Bill (DataCheck, TimeCheckIn, TimeCheckOut, idTable , status )"
@@ -118,7 +148,7 @@ public class BillController {
             }
         } catch (SQLException ex) {
             Logger.getLogger(BillController.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
+        } finally {
             Connect.close();
         }
         return 0;

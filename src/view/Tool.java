@@ -101,11 +101,6 @@ public class Tool extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tbFood);
 
         tfFind.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
-        tfFind.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfFindActionPerformed(evt);
-            }
-        });
         tfFind.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 tfFindKeyPressed(evt);
@@ -119,11 +114,6 @@ public class Tool extends javax.swing.JFrame {
         btnFind.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFindActionPerformed(evt);
-            }
-        });
-        btnFind.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                btnFindKeyPressed(evt);
             }
         });
 
@@ -271,13 +261,18 @@ public class Tool extends javax.swing.JFrame {
         panelLayout.setVerticalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAddFood, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDeleteFood, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEditFood, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
+                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnAddFood, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnDeleteFood, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(26, 26, 26))
+                    .addGroup(panelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnEditFood, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelLayout.createSequentialGroup()
                         .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -324,9 +319,9 @@ public class Tool extends javax.swing.JFrame {
 
         tfFindBill.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
         tfFindBill.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        tfFindBill.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfFindBillActionPerformed(evt);
+        tfFindBill.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                tfFindBillMouseEntered(evt);
             }
         });
         tfFindBill.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -405,14 +400,6 @@ public class Tool extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtIdFoodActionPerformed
 
-    private void tfFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfFindActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfFindActionPerformed
-
-    private void tfFindBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfFindBillActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfFindBillActionPerformed
-
     private void cbCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoryActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbCategoryActionPerformed
@@ -429,7 +416,6 @@ public class Tool extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditFoodActionPerformed
 
     private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
-        // TODO add your handling code here:
         SearchController sc = new SearchController();
         String keyword = tfFind.getText();
         String NameCategory = cbCategory.getSelectedItem().toString();
@@ -447,7 +433,7 @@ public class Tool extends javax.swing.JFrame {
         String Price = tfUnitFood.getText();
         String NameCategory = cbCategory.getSelectedItem().toString();
         int check = fc.AddFood(FoodName, NameCategory, Price);
-        if (check > 0) {
+        if (check == 1) {
             JOptionPane.showMessageDialog(this, "Thêm thành công");
             tbnFood.setRowCount(0);
             fc.loadData(tbnFood, tbFood, txtIdFood, tfUnitFood, tfNameFood, cbCategory);
@@ -505,13 +491,17 @@ public class Tool extends javax.swing.JFrame {
     }//GEN-LAST:event_tfFindKeyPressed
 
     private void tfFindBillKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfFindBillKeyPressed
-        // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             SearchController sc = new SearchController();
             String keyword = tfFindBill.getText();
             sc.SearchBillUserStaff(keyword, tbnBill, tbBill);
         }
+        
     }//GEN-LAST:event_tfFindBillKeyPressed
+
+    private void tfFindBillMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tfFindBillMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfFindBillMouseEntered
 
     /**
      * @param args the command line arguments
@@ -549,6 +539,13 @@ public class Tool extends javax.swing.JFrame {
         });
     }
 
+    public void setGuest() {
+        btnAddFood.setEnabled(false);
+        btnDeleteFood.setEnabled(false);
+        btnEditFood.setEnabled(false);
+        contentPane.setEnabledAt(1, false);
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddFood;
@@ -575,4 +572,10 @@ public class Tool extends javax.swing.JFrame {
     private javax.swing.JTextField txtpnTn;
     private javax.swing.JTextField txtpnnGi;
     // End of variables declaration//GEN-END:variables
+
+    void setPower(boolean isAdmin) {
+        if (!isAdmin) {
+            
+        }
+    }
 }

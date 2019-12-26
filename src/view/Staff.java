@@ -268,13 +268,18 @@ public class Staff extends javax.swing.JFrame {
         String passWord = tfPassWordNew.getText();
         String repeatPassWord = tfRepeatPassWord.getText();
         int type = cbPower.getSelectedIndex();
-        if (userName == null || passWord == null || repeatPassWord == null) {
+        if (userName == "" || passWord == "" || repeatPassWord == "") {
             JOptionPane.showMessageDialog(this, "Chưa nhập đủ thông tin!!!");
         } else if (StaffController.loadInfor(userName) == null) {
-            if (passWord.equals(repeatPassWord)) {
+            if (passWord == "") {
+                JOptionPane.showMessageDialog(this, "Mật khẩu không hợp lệ!!!");
+            }
+            else {
+                if (passWord.equals(repeatPassWord)) {
                 StaffController.AddStaff(fullName, userName, passWord, type);
-            } else {
-                JOptionPane.showMessageDialog(this, "Mật khẩu không đồng nhất!!!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Mật khẩu không đồng nhất!!!");
+                }
             }
         } else {
             JOptionPane.showMessageDialog(this, "Azoo, thằng này có account zồi!!!");
